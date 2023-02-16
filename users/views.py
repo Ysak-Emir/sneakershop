@@ -5,14 +5,15 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import SignUpSerializer
-from .tokens import create_jwt_pair_for_user
+from .serializers import ChangePasswordSerializer, UpdateUserSerializer
+from .tokens import create_jwt_pair_for_user, User
+from rest_framework.permissions import IsAuthenticated
+
 
 # Create your views here.
 
 
 class SignUpView(generics.GenericAPIView):
-    serializer_class = SignUpSerializer
     permission_classes = []
 
     def post(self, request: Request):
@@ -28,6 +29,12 @@ class SignUpView(generics.GenericAPIView):
             return Response(data=response, status=status.HTTP_201_CREATED)
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChangePasswordSerializer
 
 
 class LoginView(APIView):
@@ -53,3 +60,14 @@ class LoginView(APIView):
         content = {"user": str(request.user), "auth": str(request.auth)}
 
         return Response(data=content, status=status.HTTP_200_OK)
+
+
+class UpdateProfileView(generics.UpdateAPIView):
+
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateUserSerializer
+
+
+class MyObtainTokenPairView:
+    pass
