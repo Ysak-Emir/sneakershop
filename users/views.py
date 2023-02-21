@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth import authenticate
 from django.shortcuts import render
 from rest_framework import generics, status
@@ -5,7 +6,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import ChangePasswordSerializer, UpdateUserSerializer
+from .serializers import ChangePasswordSerializer, UpdateUserSerializer, PostCreateSerializer
 from .tokens import create_jwt_pair_for_user, User
 from rest_framework.permissions import IsAuthenticated
 
@@ -43,8 +44,12 @@ class LoginView(APIView):
     def post(self, request: Request):
         email = request.data.get("email")
         password = request.data.get("password")
+        serializers = PostCreateSerializer(data=request.data)
 
+        if not serializers.is_valid():
+            return
         user = authenticate(email=email, password=password)
+
 
         if user is not None:
 
@@ -63,11 +68,9 @@ class LoginView(APIView):
 
 
 class UpdateProfileView(generics.UpdateAPIView):
-
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UpdateUserSerializer
 
-
-class MyObtainTokenPairView:
-    pass
+class RegisterView(generics.GenericAPIView):
+    username = requests.codes
