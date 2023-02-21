@@ -35,3 +35,5 @@ class MyUserManager(BaseUserManager):
     ):
 
         return self._create_user(username, nickname, password, is_staff=False, is_superuser=False, **extra_fields)
+class polo():
+    pass
