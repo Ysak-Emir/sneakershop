@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'rest_framework_simplejwt',
+    'rest_framework.authtoken',
+
 ]
 
 AUTH_USER_MODEL = 'users.User'
